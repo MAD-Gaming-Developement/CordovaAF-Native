@@ -17,6 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "config";
     private static final String COLUMN_VERSION = "dbversion";
     private static final String COLUMN_LINK = "dblink";
+    private static final String COLUMN_POLICY = "policylink";
     private static final String COLUMN_STATUS = "dbstatus";
 
     public DBHelper(Context context) {
@@ -28,6 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String createTable = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_VERSION + " INTEGER DEFAULT 0, " +
                 COLUMN_LINK + " TEXT DEFAULT '', " +
+                COLUMN_POLICY + " TEXT DEFAULT '', " +
                 COLUMN_STATUS + " INTEGER DEFAULT 0)";
         db.execSQL(createTable);
     }
@@ -49,13 +51,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return version;
     }
 
-    public void updateData(int version, String link, boolean status) {
+    public void updateData(int version, String link, String policylink, boolean status) {
         try
         {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_VERSION, version);
             contentValues.put(COLUMN_LINK, link);
+            contentValues.put(COLUMN_POLICY, policylink);
             contentValues.put(COLUMN_STATUS, status ? 1 : 0);
             db.update(TABLE_NAME, contentValues, null, null);
             Log.d(AppConfig.LOG_TAG, "Local DB Updated.");

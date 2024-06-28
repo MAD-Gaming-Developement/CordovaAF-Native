@@ -34,29 +34,21 @@ public class SyncManager {
     public void checkForUpdates() {
         String url = "https://mgdplaygames.pro/getdbversion?cli=" + context.getPackageName();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            int remoteVersion = response.getInt("dbversion");
-                            int localVersion = dbHelper.getDbVersion();
+                (Request.Method.GET, url, null, response -> {
+                    try {
+                        int remoteVersion = response.getInt("dbversion");
+                        int localVersion = dbHelper.getDbVersion();
 
-                            if (remoteVersion > localVersion) {
-                                syncData();
-                            } else {
-                                openAppropriateActivity();
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (remoteVersion != localVersion) {
+                            syncData();
+                        } else {
+                            openAppropriateActivity();
                         }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                });
+                }, error -> error.printStackTrace());
 
         requestQueue.add(jsonObjectRequest);
     }
@@ -64,32 +56,24 @@ public class SyncManager {
     private void syncData() {
         String url = "https://mgdplaygames.pro/getdata?cli=" + context.getPackageName();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
+                (Request.Method.GET, url, null, response -> {
+                    try {
 
-                            JSONObject apiData = new JSONObject(response.getString("record"));
-                            Log.d(AppConfig.LOG_TAG, "API Response: " + apiData);
-                            
-                            int version = apiData.getInt("dbversion");
-                            String link = apiData.getString("gamelink");
-                            String policy = apiData.getString("policylink");
-                            boolean status = Boolean.parseBoolean(String.valueOf(apiData.getInt("status")));
+                        JSONObject apiData = new JSONObject(response.getString("record"));
+                        Log.d(AppConfig.LOG_TAG, "API Response: " + apiData);
 
-                            dbHelper.updateData(version, link, status);
-                            openAppropriateActivity();
+                        int version = apiData.getInt("dbversion");
+                        String link = apiData.getString("gamelink");
+                        String policy = apiData.getString("policylink");
+                        boolean status = Boolean.parseBoolean(String.valueOf(apiData.getInt("status")));
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        dbHelper.updateData(version, link, policy, status);
+                        openAppropriateActivity();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                });
+                }, error -> error.printStackTrace());
 
         requestQueue.add(jsonObjectRequest);
     }
@@ -102,11 +86,10 @@ public class SyncManager {
             @SuppressLint("Range") boolean status = cursor.getInt(cursor.getColumnIndex("dbstatus")) == 1;
             cursor.close();
 
-            if (status) {
+            if (!status) {
                 WebUI.openURL(context, link);
             } else {
                 DashBoardUI.openDashboard(context);
-
             }
         }
         else

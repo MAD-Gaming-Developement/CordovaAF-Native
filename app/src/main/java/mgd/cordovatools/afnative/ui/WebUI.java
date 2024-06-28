@@ -1,10 +1,15 @@
 package mgd.cordovatools.afnative.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.webkit.WebSettings;
 
 import org.apache.cordova.CordovaActivity;
+import org.apache.cordova.engine.SystemWebView;
+
+import mgd.cordovatools.afnative.R;
 
 public class WebUI extends CordovaActivity {
 
@@ -16,11 +21,20 @@ public class WebUI extends CordovaActivity {
         mContext.startActivity(cdvIntent);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String url = getIntent().getStringExtra("mLink");
-        loadUrl(url);
+        //loadUrl(url);
+
+        setContentView(R.layout.fragment_frag_policy_u_i);
+        SystemWebView webView = findViewById(R.id.cdvWebView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webView.loadUrl(url);
     }
 
 }

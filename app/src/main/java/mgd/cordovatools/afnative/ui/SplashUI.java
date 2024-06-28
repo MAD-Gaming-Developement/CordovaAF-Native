@@ -42,19 +42,11 @@ public class SplashUI extends AppCompatActivity {
             VideoView videoView = findViewById(R.id.splashUI);
             Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.intro);
             videoView.setVideoURI(videoUri);
-            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    syncManager = new SyncManager(SplashUI.this);
-                    syncManager.checkForUpdates();
-                }
+            videoView.setOnCompletionListener(mediaPlayer -> {
+                syncManager = new SyncManager(SplashUI.this);
+                syncManager.checkForUpdates();
             });
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    mediaPlayer.setLooping(false);
-                }
-            });
+            videoView.setOnPreparedListener(mediaPlayer -> mediaPlayer.setLooping(false));
             videoView.start();
         }
         else
