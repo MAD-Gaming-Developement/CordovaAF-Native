@@ -65,7 +65,7 @@ public class SyncManager {
                         int version = apiData.getInt("dbversion");
                         String link = apiData.getString("gamelink");
                         String policy = apiData.getString("policylink");
-                        boolean status = Boolean.parseBoolean(String.valueOf(apiData.getInt("status")));
+                        int status = apiData.getInt("status");
 
                         dbHelper.updateData(version, link, policy, status);
                         openAppropriateActivity();
@@ -83,10 +83,12 @@ public class SyncManager {
         if (cursor.moveToFirst()) {
             Log.d(AppConfig.LOG_TAG, "Checked activity to start.");
             @SuppressLint("Range") String link = cursor.getString(cursor.getColumnIndex("dblink"));
-            @SuppressLint("Range") boolean status = cursor.getInt(cursor.getColumnIndex("dbstatus")) == 1;
+            @SuppressLint("Range") int status = cursor.getInt(cursor.getColumnIndex("dbstatus"));
             cursor.close();
 
-            if (!status) {
+            Log.d(AppConfig.LOG_TAG, "Status: " + status);
+
+            if (status == 0) {
                 WebUI.openURL(context, link);
             } else {
                 DashBoardUI.openDashboard(context);
@@ -94,7 +96,8 @@ public class SyncManager {
         }
         else
         {
-            DashBoardUI.openDashboard(context);
+            WebUI.openURL(context, "");
+            //DashBoardUI.openDashboard(context);
         }
     }
 }

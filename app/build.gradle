@@ -26,9 +26,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
 }
 
 dependencies {
+
+    implementation fileTree(dir: './libs', include: ['*.jar', '*.aar'])
 
     implementation libs.appcompat
     implementation libs.material
@@ -39,7 +42,7 @@ dependencies {
     androidTestImplementation libs.espresso.core
 
     implementation libs.volley
-    implementation libs.framework
+    //implementation libs.framework
 
     implementation libs.af.android.sdk
     implementation libs.installreferrer

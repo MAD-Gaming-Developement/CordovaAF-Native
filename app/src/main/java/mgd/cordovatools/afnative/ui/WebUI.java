@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.engine.SystemWebView;
 
 import mgd.cordovatools.afnative.R;
 
-public class WebUI extends CordovaActivity {
+public class WebUI extends AppCompatActivity {
 
     public static void openURL(Context mContext, String mLink)
     {
@@ -34,7 +36,7 @@ public class WebUI extends CordovaActivity {
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webView.loadUrl(url);
+        webView.loadUrl("https://h5.5696slots3.com?chn=aHdwZzQzNw%3D%3D");
     }
 
 }

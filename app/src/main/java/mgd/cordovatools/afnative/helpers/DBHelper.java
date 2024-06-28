@@ -51,7 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return version;
     }
 
-    public void updateData(int version, String link, String policylink, boolean status) {
+    public void updateData(int version, String link, String policylink, int status) {
         try
         {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -59,7 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
             contentValues.put(COLUMN_VERSION, version);
             contentValues.put(COLUMN_LINK, link);
             contentValues.put(COLUMN_POLICY, policylink);
-            contentValues.put(COLUMN_STATUS, status ? 1 : 0);
+            contentValues.put(COLUMN_STATUS, status);
             db.update(TABLE_NAME, contentValues, null, null);
             Log.d(AppConfig.LOG_TAG, "Local DB Updated.");
         }

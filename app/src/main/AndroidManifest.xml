@@ -18,6 +18,9 @@
             android:name=".ui.DashBoardUI"
             android:exported="false" />
         <activity
+            android:name=".ui.WebUI"
+            android:exported="false" />
+        <activity
             android:name=".ui.SplashUI"
             android:exported="true">
             <intent-filter>
